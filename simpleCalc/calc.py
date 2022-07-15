@@ -4,8 +4,7 @@ class Calculation:
 
     @classmethod
     def calculate(self,s):
-
-        return s
+        return s 
 
 
         
