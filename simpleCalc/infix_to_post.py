@@ -14,41 +14,36 @@ def infixToPostfix(exp):
 
     for i in exp:
         # if an operand
-        if i not in operatorlookup and i!= '(' and i!=')':
+        if i.isalnum():
             postfix+=i
 
-        if  i == '(':
+        elif  i == '(':
             stack.append(i)
 
-        if i == ')':
-            while stack and stack[-1]!='(':
-                p = stack.pop()
-                postfix += p
-            # discards the last '('
-        if i == '(':
-            stack.pop()
+        elif i == ')':
+            top = stack.pop()
+            while stack and top!='(':
+                postfix += top
+                top = stack.pop()
 
         if i in operatorlookup:
             if  not stack or stack[-1]=='(':
                 stack.append(i)
             else:
                 while stack and stack[-1]!='(' and precedence[i] <= precedence[stack[-1]]:
-                    p = stack.pop()
-                    postfix += p
-                
+                    postfix += stack.pop()
+
                 stack.append(i)
 
     while stack:
-         p = stack.pop()
-         postfix += p
+         postfix += stack.pop()
 
-    return postfix.replace(' ','')
+    return ' '.join(postfix)
 
-# s = "((a+b)-c)*d)"
-s = "(K + L - M*N + (O^P) * W/U/V * T + Q)"
-ans = 'KL+MN*-OP^W*U/V/T*+Q+'
-res = infixToPostfix(s)
-print(res)
+expressions = ['4*2+5*(2+1)/2', '4^2+5*(2+1)/2',  'A*(B+C)/D']
+for s in expressions:
+    res = infixToPostfix(s)
+    print(res)
     
 
 
