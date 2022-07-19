@@ -1,11 +1,4 @@
-import operator 
-operatorlookup = {
-    '+': operator.add,
-    '-': operator.sub,
-    '*': operator.mul,
-    '/': operator.truediv,
-    '^': operator.pow,
-}
+operatorlookup = set(('+', '-' , '*' , '/' , '^' ))
 precedence = {'+':1, '-':1, '*':2, '/':2, '%':2, '^':3}
 def infixToPostfix(exp):
     ''' Given an infix expression returns a postfix expression '''
@@ -27,23 +20,30 @@ def infixToPostfix(exp):
                 top = stack.pop()
 
         if i in operatorlookup:
-            if  not stack or stack[-1]=='(':
-                stack.append(i)
-            else:
-                while stack and stack[-1]!='(' and precedence[i] <= precedence[stack[-1]]:
-                    postfix += stack.pop()
+            while stack and stack[-1]!='(' and precedence[i] <= precedence[stack[-1]]:
+                postfix += stack.pop()
+            stack.append(i)
 
-                stack.append(i)
+        if i not in operatorlookup and i not in ('(',')') and i.isdigit()==False and i.isalpha()==False:
+           postfix = f"'{i}' not suported yet"
+           return postfix 
 
+        
     while stack:
          postfix += stack.pop()
 
     return ' '.join(postfix)
 
-expressions = ['4*2+5*(2+1)/2', '4^2+5*(2+1)/2',  'A*(B+C)/D']
-for s in expressions:
-    res = infixToPostfix(s)
+# make test cases 
+expressions = ['4*2+5*(2+1*3/4)/2', '4^2+5*(2+1)/2',  'A*(B+C)/D']
+ans = ['4 2 * 5 2 1 3 * 4 / + * 2 / +',
+    '4 2 ^ 5 2 1 + * 2 / +',
+    'A B C + * D /']
+
+for i in range(len(expressions)):
+    res = infixToPostfix(expressions[i])
     print(res)
+
     
 
 
